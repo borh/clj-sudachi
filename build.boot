@@ -1,5 +1,5 @@
 (def project 'clj-jumanpp)
-(def version "0.1.0-SNAPSHOT")
+(def version "0.2.0-SNAPSHOT")
 
 (set-env! :resource-paths #{"resources" "src"}
           :source-paths   #{"test"}

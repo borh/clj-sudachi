@@ -21,7 +21,11 @@ Dependency information:
 
 Further note that you will need Clojure 1.9 (currently tested with alpha14) to use this library as it makes heavy use of clojure.spec.
 
+This project uses [boot](http://boot-clj.com/) for build tooling.
+
 ## Usage
+
+From your project:
 
 ```clojure
 (require '[clj-jumanpp.core :as jumanpp])
@@ -128,14 +132,28 @@ $ echo 'すもももももももものうち' | jumanpp --force-single-path
 EOS
 ```
 
+Alternatively, if you cloned this repository, you can try it out by installing [boot](http://boot-clj.com/) and starting the REPL:
+
+```bash
+$ boot dev
+```
+
+The `dev` command will also start a nrepl server so you can connect with your favourite IDE/editor.
+
 ## Testing
 
 The whole processing pipeline is spec'd with clojure.spec. More tests need to be added.
 
+Test with:
+
+```bash
+$ boot test
+```
+
 ## Limitations
 
 -   Currently only exposes the best parse ("--force-single-path").
--   jumanpp is called via shelling out as there are currently no direct JVM bindings available.
+-   jumanpp is called via shelling out as there are currently no JVM bindings available.
 -   Dependency on `clojure.data.csv` for parsing output format.
 
 ## Future Work

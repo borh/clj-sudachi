@@ -42,23 +42,6 @@
 (s/def ::features (s/conformer features-conformer)
   #_(s/nilable (s/map-of keyword? (s/or bool? string?))))
 
-(s/def ::node
-  (s/keys :req
-          [::surface
-           ::reading
-           ::surface-base
-           ::pos
-           ::pos-id
-           ::sub-pos
-           ::sub-pos-id
-           ::conj-type
-           ::conj-type-id
-           ::conj-form
-           ::conj-form-id
-           ::features]))
-
-(s/def ::sentence (s/coll-of ::node))
-
 (def node-keys
   [::surface
    ::reading
@@ -72,6 +55,11 @@
    ::conj-form
    ::conj-form-id
    ::features])
+
+(s/def ::node
+  (s/keys :req ~node-keys))
+
+(s/def ::sentence (s/coll-of ::node))
 
 (defn sentence
   "Given string representing output of one sentence of

@@ -32,6 +32,6 @@
 
 (deftask dev
   []
-  (comp (watch) (build) (repl :server true)))
+  (comp (watch) (build) (repl :init-ns 'clj-jumanpp.core :server true)))
 
 (require '[adzerk.boot-test :refer [test]])

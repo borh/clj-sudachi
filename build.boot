@@ -3,7 +3,7 @@
 
 (set-env! :resource-paths #{"resources" "src"}
           :source-paths   #{"test"}
-          :dependencies   '[[org.clojure/clojure "1.9.0-alpha14"]
+          :dependencies   '[[org.clojure/clojure "1.9.0-alpha15"]
 
                             [adzerk/boot-test "RELEASE" :scope "test"]
                             [org.clojure/test.check "0.9.0" :scope "test"]

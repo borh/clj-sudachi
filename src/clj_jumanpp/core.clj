@@ -25,7 +25,12 @@
 (s/def ::conj-form-id (s/conformer integer-conformer))
 
 (defn features-conformer
-  "Transforms jumanpp's last feature field (意味情報) into a map for easier filtering in processing pipelines. While all features are split on whitespace, some are key-value based (separated with:), and some are single-value. Key-values are simply merged into a map, while single-value fields are keyed according to value and given true as their value."
+  "Transforms jumanpp's last feature field (意味情報) into a map for
+  easier filtering in processing pipelines. While all features are
+  split on whitespace, some are key-value based (separated with:), and
+  some are single-value. Key-values are simply merged into a map,
+  while single-value fields are keyed according to value and given
+  true as their value."
   [s]
   (cond
     (map? s)

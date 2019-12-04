@@ -2,14 +2,16 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [clojure.string :as string])
+            [clojure.string :as string]
+            [aero.core :as aero])
   (:import [com.worksap.nlp.sudachi
             DictionaryFactory
             Tokenizer$SplitMode
             JapaneseDictionary
             JapaneseTokenizer
             Morpheme Tokenizer Dictionary]
-           [java.io FileNotFoundException]))
+           [java.io FileNotFoundException]
+           [java.nio.file LinkOption NoSuchFileException]))
 
 ;; Also: https://github.com/hiroaqii/kabosu/blob/master/src/kabosu/core.clj
 
@@ -20,20 +22,30 @@
   ;; We match against Dictionary to cover all cases.
   :ret #(instance? Dictionary %))
 
+(defn canonicalize-path
+  "Returns string of path will all symbolic links resolved."
+  [s]
+  (try
+    (-> s io/file .toPath (.toRealPath (make-array LinkOption 0)) .toString)
+    (catch NoSuchFileException _ nil)))
+
 ;; TODO Investigate hooks/plugins support
 (defn dictionary
-  "Given a dictionary type of :full, :core, or :small, returns the loaded dictionary object. Typical usage occurs only within the tokenizer function."
+  "Given a dictionary type of :full, :core, or :small, returns the loaded dictionary object.
+  Typical usage occurs only within the tokenizer function."
   [dictionary-type]
   ;; The config file is in the root of the Sudachi jar:
-  (let [sudachi-config (slurp (io/input-stream (io/resource "sudachi_fulldict.json")))
+  (let [dictionary-path (canonicalize-path (:dictionary-path (aero/read-config (io/resource "dictionary-path.edn"))))
+        _ (println dictionary-path)
+        sudachi-config (slurp (io/input-stream (io/resource "sudachi_fulldict.json")))
         dictionary-filename (case dictionary-type
-                              :full "resources/system_full.dic"
-                              :core "resources/system_core.dic"
-                              :small "resources/system_small.dic")
+                              :full (str dictionary-path "/system_full.dic")
+                              :core (str dictionary-path "/system_core.dic")
+                              :small (str dictionary-path "/system_small.dic"))
         json (string/replace sudachi-config "system_full.dic" dictionary-filename)]
     (try (.create (DictionaryFactory.) json)
          (catch FileNotFoundException _
-           (throw (Exception. (str "Failed to open '" dictionary-filename "'. Please install Sudachi dictionary files by putting them into the resources/ directory. Download them from: https://github.com/WorksApplications/SudachiDict")))))))
+           (throw (Exception. (str "Failed to open '" dictionary-filename "'.\nPlease install the Sudachi dictionary files by putting them into the SudachiDict directory or provide the correct path using the SUDACHIDICT_PATH environment variable. Download them from: https://github.com/WorksApplications/SudachiDict")))))))
 
 (s/def ::split-keyword-type #{:A :B :C})
 

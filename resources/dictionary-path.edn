@@ -1,0 +1,1 @@
+{:dictionary-path #or [#env SUDACHIDICT_PATH "SudachiDict"]}

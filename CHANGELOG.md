@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file. This change
 ## [Unreleased]
 ### Changed
 
-## 0.1.0 - 2016-11-07
+## 0.1.0 - 2018-02-18
 ### Added
 - Initial commit of working project code.
 
-[Unreleased]: https://github.com/borh/clj-jumanpp/compare/0.1.0...HEAD
-[0.1.0]: https://github.com/borh/clj-jumanpp/compare/0.1.0...0.1.0
+[Unreleased]: https://github.com/borh/clj-sudachi/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/borh/clj-sudachi/compare/0.1.0...0.1.0

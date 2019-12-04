@@ -1,0 +1,10 @@
+{:paths ["src" "resources"]
+ :deps  {org.clojure/clojure     {:mvn/version "1.10.1"}
+         com.worksap.nlp/sudachi {:mvn/version "0.3.0"}}
+ :aliases
+        {:test
+         {:extra-paths ["test"]
+          :extra-deps  {org.clojure/test.check {:mvn/version "RELEASE"}
+                        orchestra              {:mvn/version "2019.02.06-1"}
+                        criterium              {:mvn/version "0.4.5"}
+                        lambdaisland/kaocha    {:mvn/version "0.0-554"}}}}}

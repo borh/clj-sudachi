@@ -10,10 +10,8 @@
             JapaneseDictionary
             JapaneseTokenizer
             Morpheme Tokenizer Dictionary]
-           [java.io FileNotFoundException]
+           [java.io File FileNotFoundException]
            [java.nio.file LinkOption NoSuchFileException]))
-
-;; Also: https://github.com/hiroaqii/kabosu/blob/master/src/kabosu/core.clj
 
 (s/def ::dictionary-type #{:full :core :small})
 
@@ -29,6 +27,14 @@
     (-> s io/file .toPath (.toRealPath (make-array LinkOption 0)) .toString)
     (catch NoSuchFileException _ nil)))
 
+(defn join-paths [paths]
+  (let [paths (filter identity paths)]
+    (reduce
+      (fn [a p]
+        (File. a p))
+      (File. (first paths))
+      (rest paths))))
+
 ;; TODO Investigate hooks/plugins support
 (defn dictionary
   "Given a dictionary type of :full, :core, or :small, returns the loaded dictionary object.
@@ -36,16 +42,15 @@
   [dictionary-type]
   ;; The config file is in the root of the Sudachi jar:
   (let [dictionary-path (canonicalize-path (:dictionary-path (aero/read-config (io/resource "dictionary-path.edn"))))
-        _ (println dictionary-path)
         sudachi-config (slurp (io/input-stream (io/resource "sudachi_fulldict.json")))
         dictionary-filename (case dictionary-type
-                              :full (str dictionary-path "/system_full.dic")
-                              :core (str dictionary-path "/system_core.dic")
-                              :small (str dictionary-path "/system_small.dic"))
+                              :full (.toString (join-paths [dictionary-path "system_full.dic"]))
+                              :core (.toString (join-paths [dictionary-path "system_core.dic"]))
+                              :small (.toString (join-paths [dictionary-path "system_small.dic"])))
         json (string/replace sudachi-config "system_full.dic" dictionary-filename)]
     (try (.create (DictionaryFactory.) json)
          (catch FileNotFoundException _
-           (throw (Exception. (str "Failed to open '" dictionary-filename "'.\nPlease install the Sudachi dictionary files by putting them into the SudachiDict directory or provide the correct path using the SUDACHIDICT_PATH environment variable. Download them from: https://github.com/WorksApplications/SudachiDict")))))))
+           (throw (Exception. (str "Failed to open dictionary '" dictionary-filename "'.\nPlease install the Sudachi dictionary files by putting them into the SudachiDict directory or provide the correct path using the SUDACHIDICT_PATH environment variable. Download them from: https://github.com/WorksApplications/SudachiDict")))))))
 
 (s/def ::split-keyword-type #{:A :B :C})
 
@@ -76,7 +81,7 @@
 
 ;; Defaults are provided, but you may wish to override them with `binding`, or use the constructors provided.
 (def ^:dynamic *split-mode* (split-mode :A))
-(def ^:dynamic *tokenizer* (tokenizer :full))
+(def ^:dynamic *tokenizer* (tokenizer :small))
 
 (s/def ::morpheme
   (s/keys :req [:morpheme/surface :morpheme/lemma :morpheme/reading :morpheme/pos

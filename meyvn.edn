@@ -1,0 +1,7 @@
+{:pom       {:group-id    "borh"
+             :artifact-id "clj-sudachi"
+             :version     "0.2.2"
+             :name        "A Clojure library for idiomatic access to the Sudachi Japanese morphological analyzer"}
+ :packaging {:jar {:enabled           true
+                   :remote-repository {:id "clojars" :url "https://clojars.org/borh/clj-sudachi"}}}
+ :scm       {:enabled true}}
